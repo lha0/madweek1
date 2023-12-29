@@ -14,5 +14,7 @@ class Picture : Fragment()
     ): View?
     {
         return inflater.inflate(R.layout.fragment_picture, container, false)
+
+
     }
 }
