@@ -6,6 +6,8 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var viewPager: ViewPager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -15,10 +17,14 @@ class MainActivity : AppCompatActivity() {
         adapter.addFragment(Gallery(), "갤러리")
         adapter.addFragment(Picture(), "사진정보")
 
-        val viewpager: ViewPager = findViewById(R.id.pager)
+        viewPager = findViewById(R.id.pager)
         val tab: TabLayout = findViewById(R.id.tablayout)
 
-        viewpager.adapter = adapter
-        tab.setupWithViewPager(viewpager)
+        viewPager.adapter = adapter
+        tab.setupWithViewPager(viewPager)
+    }
+
+    fun moveToTab(tabIndex: Int) {
+        viewPager.setCurrentItem(tabIndex, true)
     }
 }
