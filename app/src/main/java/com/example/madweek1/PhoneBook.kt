@@ -30,7 +30,6 @@ class PhoneBook : Fragment()
         val view = inflater.inflate(R.layout.fragment_phonebook, container, false)
         val item: ListView = view.findViewById(R.id.listView)
 
-
         val adapter = PhoneNumberAdapter(requireContext(), PhoneNumberList)
         item.adapter = adapter
         return view
