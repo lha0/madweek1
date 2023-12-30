@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.ListView
 import android.content.Context
 import android.provider.ContactsContract.CommonDataKinds.Phone
+import com.example.madweek1.databinding.ActivityMainBinding
+import com.example.madweek1.databinding.FragmentPhonebookBinding
 import org.json.JSONObject
 import org.json.JSONArray
 
@@ -24,10 +26,8 @@ class PhoneBook : Fragment()
         val view = inflater.inflate(R.layout.fragment_phonebook, container, false)
         val item: ListView = view.findViewById(R.id.listView)
 
-        // assets 폴더 내에 있는 JSON 파일명을 여기에 입력합니다.
-        val jsonFileName = "phonebook.json" // 여기에 파일명을 입력하세요.
+        val jsonFileName = "phonebook.json"
 
-        // JSON 파일을 읽어오는 함수 호출
         val json_object = readJSONFromAssets(requireContext(), jsonFileName)
         if (json_object != null) {
             jsonParsing(json_object)
@@ -35,6 +35,7 @@ class PhoneBook : Fragment()
 
         val adapter = PhoneNumberAdapter(requireContext(), PhoneNumberList)
         item.adapter = adapter
+
         return view
     }
 
