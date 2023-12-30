@@ -1,7 +1,10 @@
 package com.example.madweek1
 
 import ImageAdapter
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,6 +20,7 @@ import android.util.Log
 import android.widget.Switch
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.parcelize.Parcelize
 
 
@@ -103,10 +107,20 @@ class Gallery : Fragment(), OnImageClickListener {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         val imageAdapter = ImageAdapter(requireContext(), imageIds, ImageList, this)
+
+
+
         recyclerView.adapter = imageAdapter
 
         switch.setOnCheckedChangeListener { _, isChecked ->
             toggleLayoutManager(isChecked)
+
+
+        }
+
+        val fab: FloatingActionButton = view.findViewById(R.id.plus)
+        fab.setOnClickListener {
+            openGalleryForImage()
         }
 
         return view
@@ -135,6 +149,40 @@ class Gallery : Fragment(), OnImageClickListener {
         } else {
             // LinearLayoutManager로 변경
             recyclerView.layoutManager = LinearLayoutManager(context)
+        }
+    }
+    private fun openGalleryForImage() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, IMAGE_PICK_CODE)
+    }
+    companion object {
+        private const val IMAGE_PICK_CODE = 1000
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == IMAGE_PICK_CODE && resultCode == Activity.RESULT_OK) {
+            val selectedImageUri: Uri? = data?.data
+            val NewImage: String = selectedImageUri.toString()
+            val NewInfo = ImageItem(ImageList.size + 1, NewImage, "somewhere", "2000-01-01", "카메라 모델")
+            ImageList.add(NewInfo)
+
+            val bundle = Bundle()
+
+            bundle.putInt("image_id", ImageList.size + 1)
+            bundle.putString("image_address", NewImage)
+            bundle.putParcelableArrayList("image_list", ImageList)
+
+            val detailFragment = Picture()
+            detailFragment.arguments = bundle
+
+            val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.detailPicture, detailFragment) // R.id.fragmentContainer를 실제 FrameLayout ID로 변경하세요.
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
+
+            (activity as? MainActivity)?.moveToTab(2)
+
         }
     }
 }
