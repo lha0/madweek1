@@ -1,5 +1,6 @@
 package com.example.madweek1
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -23,6 +24,7 @@ class Picture : Fragment()
 
         val imageId = arguments?.getInt("image_id", 0) ?: 0
         val imageAdress = arguments?.getInt("image_address", 0) ?: R.drawable.a
+        val imageAdress_gal = arguments?.getString("image_address", "None") ?:"None"
         imageView.setImageResource(imageAdress)
 
         //println(imageId)
@@ -39,6 +41,11 @@ class Picture : Fragment()
             }
 
         }
+        if (imageAdress_gal != "None") {
+            val uri = Uri.parse(imageAdress_gal)
+            imageView.setImageURI(uri)
+        }
+
 
         return view
     }
