@@ -1,5 +1,6 @@
 package com.example.madweek1
 
+import ImageAdapter
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,8 +12,11 @@ import android.widget.ListView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.os.Parcelable
+
 import android.util.Log
+import android.widget.Switch
 import android.widget.TextView
+import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.parcelize.Parcelize
 
 
@@ -37,6 +41,9 @@ interface OnImageClickListener {
     fun onImageClick(imageId: Int, imageAddress: Int)
 }
 class Gallery : Fragment(), OnImageClickListener {
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var switch: Switch
+
     val imageIds = arrayListOf<ImageResource>(
         ImageResource(0, R.drawable.a),
         ImageResource(1, R.drawable.b),
@@ -89,11 +96,18 @@ class Gallery : Fragment(), OnImageClickListener {
     {
 
         val view = inflater.inflate(R.layout.fragment_gallery, container, false)
-        val recyclerView: RecyclerView = view.findViewById(R.id.recyclerView)
+
+        recyclerView = view.findViewById(R.id.recyclerView)
+        switch = view.findViewById(R.id.view)
+
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         val imageAdapter = ImageAdapter(requireContext(), imageIds, ImageList, this)
         recyclerView.adapter = imageAdapter
+
+        switch.setOnCheckedChangeListener { _, isChecked ->
+            toggleLayoutManager(isChecked)
+        }
 
         return view
     }
@@ -104,7 +118,7 @@ class Gallery : Fragment(), OnImageClickListener {
         bundle.putInt("image_address", imageAddress)
         bundle.putParcelableArrayList("image_list", ImageList)
 
-        val detailFragment = DetailFragment()
+        val detailFragment = Picture()
         detailFragment.arguments = bundle
 
         val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
@@ -114,64 +128,16 @@ class Gallery : Fragment(), OnImageClickListener {
 
         (activity as? MainActivity)?.moveToTab(2)
     }
+    private fun toggleLayoutManager(isGrid: Boolean) {
+        if (isGrid) {
+            // GridLayoutManager로 변경
+            recyclerView.layoutManager = GridLayoutManager(context, 2) // 2는 열의 수입니다.
+        } else {
+            // LinearLayoutManager로 변경
+            recyclerView.layoutManager = LinearLayoutManager(context)
+        }
+    }
 }
 
 
-class ImageAdapter(private val context: Context, private val imageIds: List<ImageResource>, private val ImageList: List<ImageItem>, private val listener: OnImageClickListener) :
-    RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
 
-    class ViewHolder(val imageView: ImageView) : RecyclerView.ViewHolder(imageView)
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val imageView = ImageView(parent.context).apply {
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-            scaleType = ImageView.ScaleType.CENTER_CROP
-            adjustViewBounds = true
-        }
-
-        return ViewHolder(imageView)
-    }
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.imageView.setImageResource(imageIds.map { it.address }[position])
-        holder.imageView.setOnClickListener {
-            listener.onImageClick(imageIds.map { it.id }[position], imageIds.map { it.address }[position])
-        }
-    }
-
-    override fun getItemCount() = imageIds.size
-}
-
-class DetailFragment : Fragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_picture, container, false)
-        val imageView: ImageView = view.findViewById(R.id.imageView)
-        val nameTextView: TextView = view.findViewById(R.id.name)
-        val locTextView: TextView = view.findViewById(R.id.loc)
-        val dateTextView: TextView = view.findViewById(R.id.date)
-        val cameraTextView: TextView = view.findViewById(R.id.camera)
-
-        val imageId = arguments?.getInt("image_id", 0) ?: 0
-        val imageAdress = arguments?.getInt("image_address", 0) ?: 0
-        imageView.setImageResource(imageAdress)
-        println(imageId)
-
-        val imageItems: ArrayList<ImageItem>? = arguments?.getParcelableArrayList("image_list")
-
-        // ArrayList의 각 ImageItem에서 String 속성을 얻음
-        imageItems?.forEach { imageItem ->
-            if (imageId == imageItem.id) {
-                nameTextView.text = imageItem.name
-                locTextView.text = imageItem.location
-                dateTextView.text = imageItem.date
-                cameraTextView.text = imageItem.camera
-            }
-
-        }
-
-        return view
-    }
-}
