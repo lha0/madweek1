@@ -1,5 +1,8 @@
 package com.example.madweek1
 
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-class PhoneNumberItem(var name: String, var number: String) : Serializable
+
+@Parcelize
+class PhoneNumberItem(var id: Int, var name: String, var number: String) : Parcelable
