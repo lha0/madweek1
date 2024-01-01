@@ -30,7 +30,7 @@ class PhoneNumberAdapter (val context: Context, val PhoneNumberList: ArrayList<P
 
             // 클릭한 아이템 정보를 Bundle에 담아 프로필 프래그먼트로 전달
             val args = Bundle()
-            args.putSerializable("phoneNumberItem", PhoneNumberList[position])
+            args.putParcelable("phoneNumberItem", PhoneNumberList[position])
             profileFragment.arguments = args
 
             // 프로필 프래그먼트를 팝업창으로 보여줍니다.
