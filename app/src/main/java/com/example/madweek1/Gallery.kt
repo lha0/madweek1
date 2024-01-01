@@ -92,13 +92,7 @@ class Gallery : Fragment(), OnImageClickListener {
         } else {
             val gal_camera = fetchCameraImages()
             println(gal_camera)
-            gal_camera.forEach { uri ->
-                val id = images.imageIds.size + 1
-                val NewId = ImageResource(id, 0, uri.toString())
-                images.imageIds.add(NewId)
-                val NewInfo = ImageItem(id, "Image $id", "Gallery/Camera", "Unknown", "Unknown")
-                images.ImageList.add(NewInfo)
-            }
+
 
             printImageItemList(images.ImageList)
         }
@@ -135,7 +129,9 @@ class Gallery : Fragment(), OnImageClickListener {
                 val date = c.getLong(dateColumn)
                 val contentUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
 
-                imageList.add(contentUri)
+                if (imageList.size <= 50) {
+                    imageList.add(contentUri)
+                }
                 images.imageIds.add(ImageResource(id.toInt(), 0, contentUri.toString()))
                 images.ImageList.add(ImageItem(id.toInt(), name, "Gallery/Camera", convertLongToDate(date), "Unknown"))
             }
