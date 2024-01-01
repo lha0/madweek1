@@ -57,6 +57,7 @@ class Gallery : Fragment(), OnImageClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var switch: Switch
     private lateinit var imageAdapter: ImageAdapter
+    private val READ_CONTACTS_PERMISSION_REQUEST = 5
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,27 +70,27 @@ class Gallery : Fragment(), OnImageClickListener {
         recyclerView = view.findViewById(R.id.recyclerView)
         switch = view.findViewById(R.id.view)
 
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-        val imageAdapter = ImageAdapter(requireContext(), images.imageIds, images.ImageList, this)
-        val READ_CONTACTS_PERMISSION_REQUEST = 5
-
-
-        recyclerView.adapter = imageAdapter
-
-        switch.setOnCheckedChangeListener { _, isChecked ->
-            toggleLayoutManager(isChecked)
-
-
-        }
-
-        val fab: FloatingActionButton = view.findViewById(R.id.plus)
-        fab.setOnClickListener {
-            openGalleryForImage()
-        }
         if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.READ_CONTACTS), READ_CONTACTS_PERMISSION_REQUEST)
         } else {
+            recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+            val imageAdapter = ImageAdapter(requireContext(), images.imageIds, images.ImageList, this)
+
+
+
+            recyclerView.adapter = imageAdapter
+
+            switch.setOnCheckedChangeListener { _, isChecked ->
+                toggleLayoutManager(isChecked)
+
+
+            }
+
+            val fab: FloatingActionButton = view.findViewById(R.id.plus)
+            fab.setOnClickListener {
+                openGalleryForImage()
+            }
             val gal_camera = fetchCameraImages()
             println(gal_camera)
             gal_camera.forEach { uri ->
@@ -102,6 +103,8 @@ class Gallery : Fragment(), OnImageClickListener {
 
             printImageItemList(images.ImageList)
         }
+
+
 
 
         return view
