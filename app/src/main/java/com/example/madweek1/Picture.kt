@@ -26,7 +26,10 @@ class Picture : Fragment()
         val imageAdress = arguments?.getInt("image_address", 0) ?: R.drawable.a
         val imageAdress_gal = arguments?.getString("image_address", "None") ?:"None"
         imageView.setImageResource(imageAdress)
-
+        if (imageAdress_gal != "None") {
+            val uri = Uri.parse(imageAdress_gal)
+            imageView.setImageURI(uri)
+        }
         //println(imageId)
 
         val imageItems: ArrayList<ImageItem> = arguments?.getParcelableArrayList("image_list") ?: defaultImageItems
@@ -41,11 +44,6 @@ class Picture : Fragment()
             }
 
         }
-        if (imageAdress_gal != "None") {
-            val uri = Uri.parse(imageAdress_gal)
-            imageView.setImageURI(uri)
-        }
-
 
         return view
     }

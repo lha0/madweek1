@@ -2,6 +2,7 @@ package com.example.madweek1
 
 import ImageAdapter
 import android.app.Activity
+import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -22,7 +23,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.parcelize.Parcelize
-
+import android.provider.MediaStore
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Parcelize
 data class ImageItem(
@@ -36,63 +40,21 @@ data class ImageItem(
 @Parcelize
 data class ImageResource(
     val id: Int,
-    val address: Int
+    val address: Int,
+    val uri : String
 ) : Parcelable
 
 
 
+
 interface OnImageClickListener {
-    fun onImageClick(imageId: Int, imageAddress: Int)
+    fun onImageClick(imageId: Int, imageAddress: Int, uri: String)
 }
 class Gallery : Fragment(), OnImageClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var switch: Switch
+    private lateinit var imageAdapter: ImageAdapter
 
-    val imageIds = arrayListOf<ImageResource>(
-        ImageResource(0, R.drawable.a),
-        ImageResource(1, R.drawable.b),
-        ImageResource(2, R.drawable.c),
-        ImageResource(3, R.drawable.d),
-        ImageResource(4, R.drawable.e),
-        ImageResource(5, R.drawable.f),
-        ImageResource(6, R.drawable.g),
-        ImageResource(7, R.drawable.h),
-        ImageResource(8, R.drawable.i),
-        ImageResource(9, R.drawable.j),
-        ImageResource(10, R.drawable.k),
-        ImageResource(11, R.drawable.l),
-        ImageResource(12, R.drawable.m),
-        ImageResource(13, R.drawable.n),
-        ImageResource(14, R.drawable.o),
-        ImageResource(15, R.drawable.p),
-        ImageResource(16, R.drawable.q),
-        ImageResource(17, R.drawable.r),
-        ImageResource(18, R.drawable.s),
-        ImageResource(19, R.drawable.t),
-    )
-
-    var ImageList = arrayListOf<ImageItem>(
-        ImageItem(0,"emerald ocean", "Seogwipo", "2023-12-23", "galaxy 10"),
-        ImageItem(1, "stone island", "Jeju", "2023-12-24", "apple 20"),
-        ImageItem(2, "lights", "Daejeon", "2023-12-25", "olympus 55"),
-        ImageItem(3, "windmill", "Daejeon", "2023-12-26", "apple 20"),
-        ImageItem(4, "sky", "Jeju", "2023-12-25", "olympus 55"),
-        ImageItem(5, "lights", "Daejeon", "2023-12-25", "apple 20"),
-        ImageItem(6, "lights", "Seogwipo", "2023-12-23", "olympus 55"),
-        ImageItem(7, "lights", "Seogwipo", "2023-12-25", "apple 20"),
-        ImageItem(8, "lights", "Jeju", "2023-12-23", "olympus 55"),
-        ImageItem(9, "lights", "Daejeon", "2023-12-25", "galaxy 10"),
-        ImageItem(10, "seaOfMarseille", "Marseille", "2022-09-24", "iphone 12 pro"),
-        ImageItem(11, "sailing", "France", "2022-11-14", "canon"),
-        ImageItem(12, "Eiffel Tower", "Paris", "2023-01-01", "canon"),
-        ImageItem(13, "Chair and Man", "Paris", "2022-08-24", "iphone 12"),
-        ImageItem(14, "Library", "UC Berkely", "2023-08-30", "iphone 12"),
-        ImageItem(15, "pont", "Giverny", "2022-09-23", "canon"),
-        ImageItem(16, "Lyon", "Lyon", "2022-09-21", "iphone 12"),
-        ImageItem(17, "Rock n Sea", "Nice", "2022-09-03", "canon"),
-        ImageItem(18, "Metro", "Praha", "2022-12-23", "iphone 12"),
-        ImageItem(19, "Harbor", "Marseille", "2022-10-25", "canon"),
-        )
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -106,7 +68,7 @@ class Gallery : Fragment(), OnImageClickListener {
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val imageAdapter = ImageAdapter(requireContext(), imageIds, ImageList, this)
+        val imageAdapter = ImageAdapter(requireContext(), images.imageIds, images.ImageList, this)
 
 
 
@@ -122,15 +84,80 @@ class Gallery : Fragment(), OnImageClickListener {
         fab.setOnClickListener {
             openGalleryForImage()
         }
+        val gal_camera = fetchCameraImages()
+        println(gal_camera)
+        gal_camera.forEach { uri ->
+            val id = images.imageIds.size + 1
+            val NewId = ImageResource(id, 0, uri.toString())
+            images.imageIds.add(NewId)
+            val NewInfo = ImageItem(id, "Image $id", "Gallery/Camera", "Unknown", "Unknown")
+            images.ImageList.add(NewInfo)
+        }
+
+        printImageItemList(images.ImageList)
 
         return view
     }
-    override fun onImageClick(imageId: Int, imageAddress: Int) {
+
+    private fun fetchCameraImages(): List<Uri> {
+        val imageList = mutableListOf<Uri>()
+        val projection = arrayOf(
+            MediaStore.Images.Media._ID,
+            MediaStore.Images.Media.DISPLAY_NAME,
+            MediaStore.Images.Media.DATE_TAKEN
+        )
+
+        // Query for images
+        val cursor = requireActivity().contentResolver.query(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            projection,
+            null,
+            null,
+            "${MediaStore.Images.Media.DATE_TAKEN} DESC" // 최신 이미지부터 정렬
+        )
+
+        cursor?.use { c ->
+            val idColumn = c.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+            val nameColumn = c.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
+            val dateColumn = c.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN)
+
+            while (c.moveToNext()) {
+                val id = c.getLong(idColumn)
+                val name = c.getString(nameColumn)
+                val date = c.getLong(dateColumn)
+                val contentUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+
+                imageList.add(contentUri)
+                images.imageIds.add(ImageResource(id.toInt(), 0, contentUri.toString()))
+                images.ImageList.add(ImageItem(id.toInt(), name, "Gallery/Camera", convertLongToDate(date), "Unknown"))
+            }
+        } ?: Log.e("ImageQuery", "Cursor is null or failed to move")
+
+        return imageList
+    }
+
+    private fun convertLongToDate(time: Long): String {
+        val date = Date(time)
+        val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return format.format(date)
+    }
+    fun printImageItemList(imageList: List<ImageItem>) {
+        imageList.forEach { item ->
+            Log.d("ImageItemLog", "ID: ${item.id}, Name: ${item.name}, Location: ${item.location}")
+        }
+    }
+    override fun onImageClick(imageId: Int, imageAddress: Int, uri: String) {
 
         val bundle = Bundle()
         bundle.putInt("image_id", imageId)
-        bundle.putInt("image_address", imageAddress)
-        bundle.putParcelableArrayList("image_list", ImageList)
+
+        if (uri == "None") {
+            bundle.putInt("image_address", imageAddress)
+        } else {
+            bundle.putString("image_address", uri)
+        }
+
+        bundle.putParcelableArrayList("image_list", images.ImageList)
 
         val detailFragment = Picture()
         detailFragment.arguments = bundle
@@ -160,18 +187,25 @@ class Gallery : Fragment(), OnImageClickListener {
         private const val IMAGE_PICK_CODE = 1000
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == IMAGE_PICK_CODE && resultCode == Activity.RESULT_OK) {
             val selectedImageUri: Uri? = data?.data
             val NewImage: String = selectedImageUri.toString()
-            val NewInfo = ImageItem(ImageList.size + 1, NewImage, "somewhere", "2000-01-01", "카메라 모델")
-            ImageList.add(NewInfo)
+            println(NewImage)
+
+            val NewId = ImageResource(images.imageIds.size + 1, 0, NewImage)
+            images.imageIds.add(NewId)
+
+            val NewInfo = ImageItem(images.ImageList.size + 1, NewImage, "somewhere", "2000-01-01", "카메라 모델")
+            images.ImageList.add(NewInfo)
+
 
             val bundle = Bundle()
 
-            bundle.putInt("image_id", ImageList.size + 1)
+            bundle.putInt("image_id", NewId.id)
             bundle.putString("image_address", NewImage)
-            bundle.putParcelableArrayList("image_list", ImageList)
+            bundle.putParcelableArrayList("image_list", images.ImageList)
 
             val detailFragment = Picture()
             detailFragment.arguments = bundle
