@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -24,6 +25,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.parcelize.Parcelize
 import android.provider.MediaStore
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -69,7 +72,7 @@ class Gallery : Fragment(), OnImageClickListener {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         val imageAdapter = ImageAdapter(requireContext(), images.imageIds, images.ImageList, this)
-
+        val READ_CONTACTS_PERMISSION_REQUEST = 5
 
 
         recyclerView.adapter = imageAdapter
@@ -84,17 +87,22 @@ class Gallery : Fragment(), OnImageClickListener {
         fab.setOnClickListener {
             openGalleryForImage()
         }
-        val gal_camera = fetchCameraImages()
-        println(gal_camera)
-        gal_camera.forEach { uri ->
-            val id = images.imageIds.size + 1
-            val NewId = ImageResource(id, 0, uri.toString())
-            images.imageIds.add(NewId)
-            val NewInfo = ImageItem(id, "Image $id", "Gallery/Camera", "Unknown", "Unknown")
-            images.ImageList.add(NewInfo)
+        if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.READ_CONTACTS), READ_CONTACTS_PERMISSION_REQUEST)
+        } else {
+            val gal_camera = fetchCameraImages()
+            println(gal_camera)
+            gal_camera.forEach { uri ->
+                val id = images.imageIds.size + 1
+                val NewId = ImageResource(id, 0, uri.toString())
+                images.imageIds.add(NewId)
+                val NewInfo = ImageItem(id, "Image $id", "Gallery/Camera", "Unknown", "Unknown")
+                images.ImageList.add(NewInfo)
+            }
+
+            printImageItemList(images.ImageList)
         }
 
-        printImageItemList(images.ImageList)
 
         return view
     }
