@@ -25,6 +25,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.parcelize.Parcelize
 import android.provider.MediaStore
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import java.text.SimpleDateFormat
@@ -75,7 +77,10 @@ class Gallery : Fragment(), OnImageClickListener {
         } else {
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-            val imageAdapter = ImageAdapter(requireContext(), images.imageIds, images.ImageList, this)
+
+        imageAdapter = ImageAdapter(requireContext(), images.imageIds, images.ImageList, this)
+        val READ_CONTACTS_PERMISSION_REQUEST = 5
+
 
 
 
@@ -85,25 +90,46 @@ class Gallery : Fragment(), OnImageClickListener {
                 toggleLayoutManager(isChecked)
 
 
-            }
 
-            val fab: FloatingActionButton = view.findViewById(R.id.plus)
-            fab.setOnClickListener {
-                openGalleryForImage()
-            }
+        val fab: FloatingActionButton = view.findViewById(R.id.plus)
+        val dateFilterEditText: EditText = view.findViewById(R.id.dateFilterEditText)
+        fab.setOnClickListener {
+            openGalleryForImage()
+        }
+        if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.READ_CONTACTS), READ_CONTACTS_PERMISSION_REQUEST)
+        } else {
+
             val gal_camera = fetchCameraImages()
             println(gal_camera)
 
 
             printImageItemList(images.ImageList)
+
+            dateFilterEditText.setOnEditorActionListener { v, actionId, event ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    // 날짜에 해당되는 이미지만 필터링하여 표시
+                    val filteredImages = filterImagesByDate(v.text.toString(), images.ImageList)
+                    updateGalleryWithImages(filteredImages)
+                    true
+                } else {
+                    false
+                }
+            }
         }
-
-
-
 
         return view
     }
+    fun filterImagesByDate(date: String, imageList: List<ImageItem>): List<ImageItem> {
+        // 날짜 형식은 "yyyy-MM-dd"를 가정
+        return imageList.filter { it.date == date }
+    }
 
+    fun updateGalleryWithImages(filteredImages: List<ImageItem>) {
+        // ImageAdapter에 이미지 리스트를 업데이트하고 RecyclerView를 새로 고침
+        images.ImageList = ArrayList(filteredImages)
+        imageAdapter.notifyDataSetChanged()
+    }
     private fun fetchCameraImages(): List<Uri> {
         val imageList = mutableListOf<Uri>()
         val projection = arrayOf(
