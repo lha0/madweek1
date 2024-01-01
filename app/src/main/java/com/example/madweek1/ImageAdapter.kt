@@ -8,6 +8,8 @@ import com.example.madweek1.ImageResource
 import com.example.madweek1.OnImageClickListener
 import com.example.madweek1.R
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 
 class ImageAdapter(
     private val context: Context,
@@ -36,7 +38,7 @@ class ImageAdapter(
         val imageItem = imageList.find { it.id == imageResource.id }
 
         if (imageResource.uri == "None") {
-            holder.imageView.setImageResource(imageResource.address)
+
             Glide.with(context)
                 .load(imageResource.address)
                 .into(holder.imageView)
@@ -46,14 +48,23 @@ class ImageAdapter(
             }
         } else {
             val uri = Uri.parse(imageResource.uri)
-            Glide.with(context)
-                .load(uri)
-                .into(holder.imageView)
+            loadOptimizedImage(holder.imageView, uri)
 
             holder.imageView.setOnClickListener {
                 listener.onImageClick(imageResource.id, 0, imageResource.uri)
             }
         }
+    }
+    fun loadOptimizedImage(imageView: ImageView, imageUrl: Uri) {
+        val requestOptions = RequestOptions()
+            .override(100, 100)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .centerCrop() // 또는 fitCenter()
+
+        Glide.with(imageView.context)
+            .load(imageUrl)
+            .apply(requestOptions)
+            .into(imageView)
     }
 
 
