@@ -33,9 +33,9 @@ class Profile : Fragment() {
         val listbutton = view.findViewById<Button>(R.id.listbutton)
         val callbutton = view.findViewById<Button>(R.id.callbutton)
 
-        val phoneNumberItem = arguments?.getSerializable("phoneNumberItem") as PhoneNumberItem
-        name.text = phoneNumberItem.name
-        number.text = phoneNumberItem.number
+        val phoneNumberItem = arguments?.getParcelable<PhoneNumberItem>("phoneNumberItem")
+        name.text = phoneNumberItem?.name
+        number.text = phoneNumberItem?.number
 
         listbutton.setOnClickListener {
             val fragmentManager = (context as AppCompatActivity).supportFragmentManager
@@ -50,7 +50,7 @@ class Profile : Fragment() {
 
         callbutton.setOnClickListener{
                 var intent = Intent(Intent.ACTION_DIAL)
-                intent.data = Uri.parse("tel: "+ phoneNumberItem.number)
+                intent.data = Uri.parse("tel: "+ phoneNumberItem?.number)
                 startActivity(intent)
         }
 
