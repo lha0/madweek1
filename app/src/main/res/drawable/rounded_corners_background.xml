@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-    <solid android:color="@android:color/white"/> <!-- 배경 색상 지정 -->
-    <corners android:radius="12dp"/> <!-- 둥근 테두리의 반지름 설정 -->
+    <solid android:color="@color/white"/> <!-- 배경 색상 지정 -->
+    <corners android:radius="25dp"/> <!-- 둥근 테두리의 반지름 설정 -->
 </shape>
