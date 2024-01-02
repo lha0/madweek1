@@ -2,6 +2,7 @@ package com.example.madweek1
 
 import android.content.ContentUris
 import android.content.Context
+import android.content.pm.PackageManager
 import android.media.Image
 import android.net.Uri
 import android.os.Build
@@ -11,6 +12,9 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 
@@ -34,7 +38,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
         val adapter = PagerAdapter(supportFragmentManager)
         adapter.addFragment(PhoneBook(), "연락처")
         adapter.addFragment(Gallery(), "갤러리")
@@ -46,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = adapter
         tab.setupWithViewPager(viewPager)
 
-        requestPermission()
+        //requestPermission()
     }
 
     fun moveToTab(tabIndex: Int) {
