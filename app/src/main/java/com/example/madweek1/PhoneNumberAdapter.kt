@@ -6,12 +6,12 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.ContactsContract
-import android.provider.ContactsContract.CommonDataKinds.Phone
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.ImageView
+
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -38,12 +38,12 @@ class PhoneNumberAdapter (val context: Context, val PhoneNumberList: ArrayList<P
 
             // 클릭한 아이템 정보를 Bundle에 담아 프로필 프래그먼트로 전달
             val args = Bundle()
+
             args.putParcelable("phoneNumberItem", PhoneNumberList[position])
             profileFragment.arguments = args
 
-            // 프로필 프래그먼트를 팝업창으로 보여줍니다.
             fragmentManager.beginTransaction()
-                .replace(R.id.mainPhoneBook, profileFragment) // fragment_container는 프로필을 보여줄 레이아웃의 ID입니다.
+                .replace(R.id.mainPhoneBook, profileFragment)
                 .addToBackStack(null)
                 .commit()
         }

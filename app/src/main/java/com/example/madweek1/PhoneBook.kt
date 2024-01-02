@@ -7,18 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
-import android.content.Context
+
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.provider.ContactsContract
-import android.provider.ContactsContract.CommonDataKinds.Phone
+
 import android.widget.Button
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.madweek1.databinding.ActivityMainBinding
-import com.example.madweek1.databinding.FragmentPhonebookBinding
-import org.json.JSONObject
-import org.json.JSONArray
 
 
 class PhoneBook : Fragment()
