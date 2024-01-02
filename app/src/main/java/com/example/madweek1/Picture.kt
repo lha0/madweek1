@@ -28,9 +28,9 @@ class Picture : Fragment()
         val imageAdress = arguments?.getInt("image_address", 0) ?: R.drawable.a
         val imageAdress_gal = arguments?.getString("image_address", "None") ?:"None"
 
-        nameTextView.setOnClickListener { showEditDialog("name", nameTextView) }
-        locTextView.setOnClickListener { showEditDialog("date", locTextView) }
-        dateTextView.setOnClickListener { showEditDialog("location", dateTextView) }
+        nameTextView.setOnClickListener { showEditDialog("name", nameTextView, imageId) }
+        //locTextView.setOnClickListener { showEditDialog("date", locTextView, imageId) }
+        locTextView.setOnClickListener { showEditDialog("location", locTextView, imageId) }
 
         imageView.setImageResource(imageAdress)
         if (imageAdress_gal != "None") {
@@ -53,7 +53,7 @@ class Picture : Fragment()
 
         return view
     }
-    private fun showEditDialog(field: String, textView: TextView) {
+    private fun showEditDialog(field: String, textView: TextView, imageId: Int) {
         val editText = EditText(context)
         editText.setText(textView.text)
 
@@ -61,9 +61,24 @@ class Picture : Fragment()
             .setTitle("Edit $field")
             .setView(editText)
             .setPositiveButton("Save") { dialog, which ->
-                textView.text = editText.text.toString()
+                val text_to_change = editText.text.toString()
+                textView.text = text_to_change
+                val itemIndex = images.ImageList.indexOfFirst { it.id == imageId }
 
-                // Here you can also update the model or database with the new value
+                if (itemIndex != -1) {
+                    // Replace with a new item with the updated name
+                    if (field == "name") {
+                        images.ImageList[itemIndex] =
+                            images.ImageList[itemIndex].copy(name = text_to_change)
+                    } else {
+                        images.ImageList[itemIndex] =
+                            images.ImageList[itemIndex].copy(location = text_to_change)
+                    }
+
+                    // Notify the adapter if you have a reference to it, assuming `imageAdapter` is a field
+                    // imageAdapter.notifyItemChanged(itemIndex)
+                }
+
             }
             .setNegativeButton("Cancel", null)
             .create()
