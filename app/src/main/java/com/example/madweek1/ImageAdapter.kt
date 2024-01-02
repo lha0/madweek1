@@ -3,10 +3,8 @@ import android.net.Uri
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.madweek1.ImageItem
 import com.example.madweek1.ImageResource
 import com.example.madweek1.OnImageClickListener
-import com.example.madweek1.R
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
@@ -14,7 +12,6 @@ import com.bumptech.glide.request.RequestOptions
 class ImageAdapter(
     private val context: Context,
     var imageIds: List<ImageResource>,
-    var imageList: List<ImageItem>,
     private val listener: OnImageClickListener
 ) : RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
 
@@ -29,16 +26,12 @@ class ImageAdapter(
             scaleType = ImageView.ScaleType.CENTER_CROP
             adjustViewBounds = true
         }
-
-
         return ViewHolder(imageView)
     }
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val imageResource = imageIds[position]
-        val imageItem = imageList.find { it.id == imageResource.id }
 
         if (imageResource.uri == "None") {
-
             Glide.with(context)
                 .load(imageResource.address)
                 .into(holder.imageView)

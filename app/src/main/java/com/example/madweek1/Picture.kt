@@ -18,6 +18,7 @@ class Picture : Fragment()
         val defaultImageItems = arrayListOf(ImageItem(0, "emerald ocean", "Seogwipo", "2023-12-23", "galaxy 10"))
 
         val view = inflater.inflate(R.layout.fragment_picture, container, false)
+
         val imageView: ImageView = view.findViewById(R.id.imageView)
         val nameTextView: TextView = view.findViewById(R.id.name)
         val locTextView: TextView = view.findViewById(R.id.loc)
@@ -29,7 +30,6 @@ class Picture : Fragment()
         val imageAdress_gal = arguments?.getString("image_address", "None") ?:"None"
 
         nameTextView.setOnClickListener { showEditDialog("name", nameTextView, imageId) }
-        //locTextView.setOnClickListener { showEditDialog("date", locTextView, imageId) }
         locTextView.setOnClickListener { showEditDialog("location", locTextView, imageId) }
 
         imageView.setImageResource(imageAdress)
@@ -37,7 +37,6 @@ class Picture : Fragment()
             val uri = Uri.parse(imageAdress_gal)
             imageView.setImageURI(uri)
         }
-        //println(imageId)
 
         val imageItems: ArrayList<ImageItem> = arguments?.getParcelableArrayList("image_list") ?: defaultImageItems
 
@@ -65,6 +64,7 @@ class Picture : Fragment()
                 textView.text = text_to_change
                 val itemIndex = images.ImageList.indexOfFirst { it.id == imageId }
 
+                // itemIndex 가 -1이면 없는 아이템임
                 if (itemIndex != -1) {
                     // Replace with a new item with the updated name
                     if (field == "name") {
@@ -74,11 +74,7 @@ class Picture : Fragment()
                         images.ImageList[itemIndex] =
                             images.ImageList[itemIndex].copy(location = text_to_change)
                     }
-
-                    // Notify the adapter if you have a reference to it, assuming `imageAdapter` is a field
-                    // imageAdapter.notifyItemChanged(itemIndex)
                 }
-
             }
             .setNegativeButton("Cancel", null)
             .create()
