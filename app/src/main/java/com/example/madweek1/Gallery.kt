@@ -108,7 +108,6 @@ class Gallery : Fragment(), OnImageClickListener {
             openGalleryForImage()
         }
 
-            printImageItemList(images.ImageList)
 
             dateFilterEditText.setOnEditorActionListener { v, actionId, event ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
