@@ -108,28 +108,42 @@ class Gallery : Fragment(), OnImageClickListener {
             openGalleryForImage()
         }
 
-        dateFilterEditText.setOnEditorActionListener { v, actionId, event ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                // 날짜에 해당되는 이미지만 필터링하여 표시
-                val filteredImages = filterImagesByDate(v.text.toString(), images.ImageList)
-                updateGalleryWithImages(filteredImages)
-                true
-            } else {
-                false
-            }
-        }
+            printImageItemList(images.ImageList)
 
+            dateFilterEditText.setOnEditorActionListener { v, actionId, event ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    // 날짜에 해당되는 이미지만 필터링하여 표시
+                    val filteredImages = filterImagesByDate(v.text.toString(), images.ImageList, images.imageIds)
+                    updateGalleryWithImages(filteredImages)
+                    true
+                } else {
+                    false
+                }
+
+            }
 
         return view
     }
-    fun filterImagesByDate(date: String, imageList: List<ImageItem>): List<ImageItem> {
+    fun filterImagesByDate(date: String, imageList: List<ImageItem>, imageIds: List<ImageResource>): List<ImageResource> {
         // 날짜 형식은 "yyyy-MM-dd"를 가정
-        return imageList.filter { it.date == date }
+        var imageList_date = imageList.filter { it.date == date }
+        val dateFormatRegex = Regex("\\d{4}-\\d{2}-\\d{2}")
+        var filteredImageIds = imageIds.filter { imageResource ->
+            imageList_date.any { imageItem ->
+                imageItem.id == imageResource.id
+            }
+        }
+
+        if (!dateFormatRegex.matches(date)) {
+            filteredImageIds = images.no_change_imageIds
+        }
+
+        return filteredImageIds
     }
 
-    fun updateGalleryWithImages(filteredImages: List<ImageItem>) {
+    fun updateGalleryWithImages(filteredImages: List<ImageResource>) {
         // ImageAdapter에 이미지 리스트를 업데이트하고 RecyclerView를 새로 고침
-        images.ImageList = ArrayList(filteredImages)
+        imageAdapter.imageIds = ArrayList(filteredImages)
         imageAdapter.notifyDataSetChanged()
     }
     private fun fetchCameraImages(): List<Uri> {
@@ -167,6 +181,7 @@ class Gallery : Fragment(), OnImageClickListener {
                 images.ImageList.add(ImageItem(id.toInt(), name, "Gallery/Camera", convertLongToDate(date), "Unknown"))
             }
         } ?: Log.e("ImageQuery", "Cursor is null or failed to move")
+        images.no_change_imageIds = images.imageIds
 
         return imageList
     }

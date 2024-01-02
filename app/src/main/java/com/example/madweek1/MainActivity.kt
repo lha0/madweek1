@@ -21,9 +21,10 @@ import com.google.android.material.tabs.TabLayout
 object images {
     val imageIds = arrayListOf<ImageResource>(
         //ImageResource(0, R.drawable.a, "None"),
-
     )
-
+    var no_change_imageIds = arrayListOf<ImageResource>(
+        //ImageResource(0, R.drawable.a, "None"),
+    )
     var ImageList = arrayListOf<ImageItem>(
         //ImageItem(0,"emerald ocean", "Seogwipo", "2023-12-23", "galaxy 10"),
 

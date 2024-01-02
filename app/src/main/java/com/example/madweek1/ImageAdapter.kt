@@ -13,7 +13,7 @@ import com.bumptech.glide.request.RequestOptions
 
 class ImageAdapter(
     private val context: Context,
-    private var imageIds: List<ImageResource>,
+    var imageIds: List<ImageResource>,
     var imageList: List<ImageItem>,
     private val listener: OnImageClickListener
 ) : RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
