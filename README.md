@@ -68,9 +68,9 @@ targetSdkVersion 33
 
 ### TAB 2 - 갤러리
 
-<p width="100%">
-    <img src="https://github.com/lha0/madweek1/assets/78598160/ff80e028-380f-4683-8cd0-f0fc09afd877" alt="ScreenShot3" width="50%"/>
-    <img src="https://github.com/lha0/madweek1/assets/78598160/c19d7225-29dd-4241-b148-507ed6ad432c" alt="ScreenShot4" width="50%"/>
+<p align="center" width="100%">
+    <img src="https://github.com/lha0/madweek1/assets/78598160/ff80e028-380f-4683-8cd0-f0fc09afd877" alt="ScreenShot3" width="40%"/>
+    <img src="https://github.com/lha0/madweek1/assets/78598160/c19d7225-29dd-4241-b148-507ed6ad432c" alt="ScreenShot4" width="40%"/>
 </p>
 
 ***Major features***
