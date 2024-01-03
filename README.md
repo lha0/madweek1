@@ -26,7 +26,7 @@ targetSdkVersion 33
 
 ### TAB 1 - 연락처
 
-<p width="100%">
+<p align="center" width="100%">
     <img src="https://github.com/lha0/madweek1/assets/78598160/ca99b033-d576-4aa9-8daf-e9b57b75e06f" alt="ScreenShot1" width="50%"/>
     <img src="https://github.com/lha0/madweek1/assets/78598160/bd2a5c63-4a4b-4b1e-8968-f77ae6c95dde" alt="ScreenShot2" width="50%"/>
 </p>
