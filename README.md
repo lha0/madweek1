@@ -32,6 +32,30 @@ targetSdkVersion 33
 ---
 
 ## 3. 어플리케이션 소개
+### 0. 초기세팅
+
+<p align="center" width="100%">
+    <img src="https://github.com/lha0/madweek1/assets/78598160/5001fdcf-b22c-4ba0-b5ea-1c53b2897659" alt="ScreenShot1" width="40%"/>
+    <img src="https://github.com/lha0/madweek1/assets/78598160/1275f72b-2410-49c9-a0db-e1e7d08f3dad" alt="ScreenShot2" width="40%"/>
+</p>
+
+***Major features***
+
+- 연락처 접근 권한 설정
+- 갤러리 접근 권한 설정
+
+---
+
+***기술설명***
+
+- **핸드폰 내부 연락처 정보 가져오기**
+    - `ContactsContract API` 를 활용한 핸드폰 연락처 접근 및 서칭
+    
+- **핸드폰 이미지 접근하기**
+    - `mediaStore API` 를 활용한 External Stroage 이미지 ID 접근 및 서칭
+    - 글로벌 변수 리스트 (ImageIds, ImageList)를 활용한 사진 정보(URI, id 등) 저장
+ 
+---
 
 ### TAB 1 - 연락처
 
