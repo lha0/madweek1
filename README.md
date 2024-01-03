@@ -1,6 +1,9 @@
 # S-view
-## S-view란?
+## 프로젝트 소개
 연락처, 갤러리, 사진정보 총 3개의 탭이 있는 S-view는, 휴대폰 연락처와 갤러리에 쉽고 빠르게 접근할 수 있으며, 세부 검색 및 정보 조회, 수정이 가능한 Android Application 입니다.
+
+### APK file
+
 
 ## 1. 개발 팀원
 
@@ -19,6 +22,8 @@ targetSdkVersion 33
 
 - IDE: Android Studio
 - Target Device:GALAXY S10e
+- Version Control: Github
+- Design: Figma
 
 ---
 
