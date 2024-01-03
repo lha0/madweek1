@@ -27,8 +27,8 @@ targetSdkVersion 33
 ### TAB 1 - 연락처
 
 <p width="100%">
-    <img src="![readme1](https://github.com/lha0/madweek1/assets/78598160/ca99b033-d576-4aa9-8daf-e9b57b75e06f)" alt="ScreenShot1" width="50%"/>
-    <img src="![readme2](https://github.com/lha0/madweek1/assets/78598160/bd2a5c63-4a4b-4b1e-8968-f77ae6c95dde)" alt="ScreenShot2" width="50%"/>
+    <img src="https://github.com/lha0/madweek1/assets/78598160/ca99b033-d576-4aa9-8daf-e9b57b75e06f" alt="ScreenShot1" width="50%"/>
+    <img src="https://github.com/lha0/madweek1/assets/78598160/bd2a5c63-4a4b-4b1e-8968-f77ae6c95dde" alt="ScreenShot2" width="50%"/>
 </p>
     
 
@@ -68,9 +68,10 @@ targetSdkVersion 33
 
 ### TAB 2 - 갤러리
 
-![readme3](https://github.com/lha0/madweek1/assets/78598160/ff80e028-380f-4683-8cd0-f0fc09afd877)
-
-![readme4](https://github.com/lha0/madweek1/assets/78598160/c19d7225-29dd-4241-b148-507ed6ad432c)
+<p width="100%">
+    <img src="https://github.com/lha0/madweek1/assets/78598160/ff80e028-380f-4683-8cd0-f0fc09afd877" alt="ScreenShot3" width="50%"/>
+    <img src="https://github.com/lha0/madweek1/assets/78598160/c19d7225-29dd-4241-b148-507ed6ad432c" alt="ScreenShot4" width="50%"/>
+</p>
 
 ***Major features***
 
