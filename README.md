@@ -28,7 +28,8 @@ targetSdkVersion 33
 
 ![readme1](https://github.com/lha0/madweek1/assets/78598160/ca99b033-d576-4aa9-8daf-e9b57b75e06f)
 
-![Screenshot_20240102_183353_S-view.jpg](https://prod-files-secure.s3.us-west-2.amazonaws.com/f6cb388f-3934-47d6-9928-26d2e10eb0fc/5daef55b-5b76-4088-9d83-3fc4f7644975/Screenshot_20240102_183353_S-view.jpg)
+![readme2](https://github.com/lha0/madweek1/assets/78598160/bd2a5c63-4a4b-4b1e-8968-f77ae6c95dde)
+    
 
 ***Major features***
 
