@@ -7,6 +7,7 @@ import android.content.ContentUris
 import android.content.ContentValues.TAG
 
 import android.content.Intent
+import android.content.pm.PackageManager
 
 import android.net.Uri
 import android.os.Build
@@ -30,6 +31,7 @@ import android.provider.MediaStore
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -42,19 +44,6 @@ class Gallery : Fragment(), OnImageClickListener {
     private lateinit var imageAdapter: ImageAdapter
     private val IMAGE_PICK_CODE = 1000
 
-    private val galleryPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-            if (it) {
-                val intent = Intent(Intent.ACTION_PICK)
-                intent.setDataAndType(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    "image/*"
-                )
-                fetchCameraImages()
-            } else
-                Log.d(TAG, "deny")
-        }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -63,10 +52,7 @@ class Gallery : Fragment(), OnImageClickListener {
         recyclerView = view.findViewById(R.id.recyclerView)
         switch = view.findViewById(R.id.view)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-            galleryPermissionLauncher.launch(android.Manifest.permission.READ_MEDIA_IMAGES)
-        else
-            galleryPermissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+        fetchCameraImages()
 
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -241,9 +227,6 @@ class Gallery : Fragment(), OnImageClickListener {
             images.ImageList.add(NewInfo)
 
             onImageClick(NewId.id, 0, NewImage)
-
         }
-
     }
-
 }

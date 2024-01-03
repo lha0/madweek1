@@ -32,11 +32,7 @@ class PhoneBook : Fragment()
         val view = inflater.inflate(R.layout.fragment_phonebook, container, false)
         item = view.findViewById(R.id.listView)
 
-        if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.READ_CONTACTS), READ_CONTACTS_PERMISSION_REQUEST)
-        } else {
-            loadContacts()
-        }
+        loadContacts()
 
         return view
     }
